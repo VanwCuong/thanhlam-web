@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THANH LÂM - MAN CLOTHING | Modern & Minimalist Menswear</title>
+  <meta name="description" content="Thương hiệu thời trang nam hiện đại, lịch lãm và tối giản. Khám phá BST áo sơ mi, polo, quần tây và phụ kiện cao cấp.">
+  
+  <!-- Google Fonts & Font Awesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="top-bar">
+    <span>MIỄN PHÍ VẬN CHUYỂN CHO ĐƠN HÀNG TỪ 1.000.000đ • HOTLINE: 0988.XXX.XXX</span>
+  </div>
+
+  <!-- Header / Navigation -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#/" class="brand-logo">
+        <span class="logo-text">THANH LÂM</span>
+        <span class="logo-sub">MAN CLOTHING</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#/" class="nav-link active">Trang Chủ</a>
+        <a href="#/san-pham" class="nav-link">Sản Phẩm</a>
+        <a href="#/mix-match" class="nav-link"><i class="fa-solid fa-wand-magic-sparkles"></i> Mix & Match</a>
+        <a href="#/ve-thanh-lam" class="nav-link">Về Thanh Lâm</a>
+        <a href="#/lien-he" class="nav-link">Liên Hệ</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Tìm kiếm sản phẩm...">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        </div>
+        <button class="cart-btn" id="openCartBtn" aria-label="Giỏ hàng">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="cart-count" id="cartCount">0</span>
+        </button>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Dynamic SPA Content Views Container -->
+  <main id="app-view">
+    <!-- Nội dung sẽ được render động bằng app.js dựa trên Hash Route -->
+  </main>
+
+  <!-- Marquee Tape -->
+  <div class="marquee-wrapper">
+    <div class="marquee-content">
+      <span>PREMIUM QUALITY</span><span class="dot">•</span>
+      <span>MODERN FIT</span><span class="dot">•</span>
+      <span>THANH LAM MAN</span><span class="dot">•</span>
+      <span>SHIPPED NATIONWIDE</span><span class="dot">•</span>
+      <span>MINIMALIST STREETWEAR</span><span class="dot">•</span>
+      <span>PREMIUM QUALITY</span><span class="dot">•</span>
+      <span>MODERN FIT</span><span class="dot">•</span>
+      <span>THANH LAM MAN</span><span class="dot">•</span>
+      <span>SHIPPED NATIONWIDE</span><span class="dot">•</span>
+    </div>
+  </div>
+
+  <!-- Social Hub Floating Controls -->
+  <div class="social-hub-float">
+    <a href="https://zalo.me" target="_blank" class="social-icon zalo" title="Chat Zalo"><i class="fa-solid fa-comment-dots"></i></a>
+    <a href="https://facebook.com" target="_blank" class="social-icon facebook" title="Fanpage Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+    <a href="https://tiktok.com/@ThanhLamMan" target="_blank" class="social-icon tiktok" title="TikTok @ThanhLamMan"><i class="fa-brands fa-tiktok"></i></a>
+  </div>
+
+  <!-- QuickView Modal -->
+  <div class="modal-overlay" id="quickViewModal">
+    <div class="modal-content quickview-content">
+      <button class="modal-close" id="closeQuickView">&times;</button>
+      <div id="quickViewBody" class="quickview-grid"></div>
+    </div>
+  </div>
+
+  <!-- Cart Drawer Overlay -->
+  <div class="cart-drawer-overlay" id="cartOverlay"></div>
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h3>GIỎ HÀNG CỦA BẠN (<span id="cartDrawerCount">0</span>)</h3>
+      <button class="cart-close" id="closeCartBtn">&times;</button>
+    </div>
+    <div class="cart-items" id="cartItemsList">
+      <!-- Items render bằng JS -->
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Tổng tiền:</span>
+        <strong id="cartTotalPrice">0đ</strong>
+      </div>
+      <button class="btn btn-primary btn-block" id="checkoutBtn">TIẾN HÀNH ĐẶT HÀNG</button>
+    </div>
+  </aside>
+
+  <!-- Checkout Modal -->
+  <div class="modal-overlay" id="checkoutModal">
+    <div class="modal-content checkout-content">
+      <button class="modal-close" id="closeCheckout">&times;</button>
+      <h2>ĐẶT HÀNG TRỰC TUYẾN</h2>
+      <p class="modal-subtitle">Xác nhận thông tin giao hàng & chi tiết đơn hàng</p>
+      
+      <div class="checkout-grid">
+        <form id="orderForm" class="checkout-form">
+          <div class="form-group">
+            <label for="customerName">Họ và tên *</label>
+            <input type="text" id="customerName" required placeholder="Nguyễn Văn A">
+          </div>
+          <div class="form-group">
+            <label for="customerPhone">Số điện thoại *</label>
+            <input type="tel" id="customerPhone" required placeholder="0988xxxxxx">
+          </div>
+          <div class="form-group">
+            <label for="customerAddress">Địa chỉ nhận hàng *</label>
+            <input type="text" id="customerAddress" required placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/TP">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="customerHeight">Chiều cao (cm)</label>
+              <input type="number" id="customerHeight" placeholder="175">
+            </div>
+            <div class="form-group">
+              <label for="customerWeight">Cân nặng (kg)</label>
+              <input type="number" id="customerWeight" placeholder="68">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="orderNote">Ghi chú thêm (Size, màu ưa thích...)</label>
+            <textarea id="orderNote" rows="3" placeholder="Ghi chú về đơn hàng hoặc tư vấn thêm size..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-accent btn-block" id="submitOrderBtn">
+            <span class="btn-text">XÁC NHẬN ĐẶT HÀNG</span>
+            <span class="spinner" id="formSpinner"></span>
+          </button>
+        </form>
+
+        <div class="order-summary-box">
+          <h3>Đơn hàng của bạn</h3>
+          <div id="checkoutSummaryItems" class="checkout-summary-items"></div>
+          <div class="summary-line total-line">
+            <span>Tổng thanh toán:</span>
+            <strong id="checkoutTotalPrice">0đ</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-col">
+        <h4 class="footer-brand">THANH LÂM MAN</h4>
+        <p>Thương hiệu thời trang nam tối giản, hiện đại và tinh tế. Nâng tầm phong cách sống cho quý ông hiện đại.</p>
+      </div>
+      <div class="footer-col">
+        <h5>DANH MỤC</h5>
+        <ul>
+          <li><a href="#/san-pham">Áo Sơ Mi</a></li>
+          <li><a href="#/san-pham">Áo Polo / T-Shirt</a></li>
+          <li><a href="#/san-pham">Quần Tây / Chino</a></li>
+          <li><a href="#/san-pham">Áo Khoác</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>KẾT NỐI</h5>
+        <ul>
+          <li><a href="https://zalo.me" target="_blank">Zalo CSKH</a></li>
+          <li><a href="https://facebook.com" target="_blank">Facebook Fanpage</a></li>
+          <li><a href="https://tiktok.com/@ThanhLamMan" target="_blank">TikTok @ThanhLamMan</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>CỬA HÀNG</h5>
+        <p><i class="fa-solid fa-location-dot"></i> Hotline: 0988.XXX.XXX</p>
+        <p><i class="fa-solid fa-envelope"></i> Email: contact@thanhlamman.com</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 THANH LÂM - MAN CLOTHING. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
