@@ -129,9 +129,22 @@ function initScrollAnimations() {
   revealSections.forEach(section => scrollObserver.observe(section));
 }
 
+function closeMobileNav() {
+  const toggle = document.getElementById('mobileToggle');
+  const navLinks = document.getElementById('primary-navigation');
+  const icon = toggle.querySelector('i');
+
+  navLinks.classList.remove('is-open');
+  toggle.setAttribute('aria-expanded', 'false');
+  toggle.setAttribute('aria-label', 'Mở menu');
+  icon.classList.remove('fa-xmark');
+  icon.classList.add('fa-bars');
+}
+
 function handleRouting() {
   const hash = window.location.hash || '#/';
   const appView = document.getElementById('app-view');
+  closeMobileNav();
   
   document.querySelectorAll('.nav-link').forEach(link => {
     link.classList.toggle('active', link.getAttribute('href') === hash);
@@ -218,7 +231,7 @@ function renderProductCards(items) {
       <div class="product-thumb">
         <img src="${prod.image}" alt="${prod.name}">
         <div class="product-actions">
-          <button class="btn btn-primary btn-block" style="font-size:0.75rem" onclick="openQuickView('${prod.id}')">
+          <button class="btn btn-primary btn-block product-quickview-btn" onclick="openQuickView('${prod.id}')">
             <i class="fa-solid fa-eye"></i> XEM NHANH
           </button>
         </div>
@@ -304,9 +317,9 @@ function renderMixMatchView() {
 
 function renderAboutView() {
   return `
-    <section class="scroll-reveal" style="max-width: 900px; margin: 60px auto; padding: 0 24px;">
-      <h2 style="font-size:2.5rem; font-weight:800; margin-bottom: 20px;">CÂU CHUYỆN THANH LÂM MAN</h2>
-      <p style="font-size:1.1rem; line-height: 1.8; margin-bottom: 20px;">
+    <section class="content-page about-page scroll-reveal">
+      <h2 class="content-page-title">CÂU CHUYỆN THANH LÂM MAN</h2>
+      <p class="content-page-copy">
         Được thành lập với sứ mệnh định hình phong cách ăn mặc nam tính hiện đại, <strong>THANH LÂM - MAN CLOTHING</strong> theo đuổi triết lý <em>Minimalist & Contemporary Streetwear</em>.
       </p>
     </section>
@@ -315,9 +328,9 @@ function renderAboutView() {
 
 function renderContactView() {
   return `
-    <section class="scroll-reveal" style="max-width: 900px; margin: 60px auto; padding: 0 24px; text-align:center;">
-      <h2 style="font-size:2.5rem; font-weight:800; margin-bottom: 20px;">LIÊN HỆ VỚI CHÚNG TÔI</h2>
-      <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-top:30px;">
+    <section class="content-page contact-page scroll-reveal">
+      <h2 class="content-page-title">LIÊN HỆ VỚI CHÚNG TÔI</h2>
+      <div class="contact-actions">
         <a href="https://zalo.me" target="_blank" class="btn btn-primary"><i class="fa-solid fa-comment-dots"></i> CHAT ZALO CSKH</a>
         <a href="https://facebook.com" target="_blank" class="btn btn-outline"><i class="fa-brands fa-facebook"></i> FACEBOOK FANPAGE</a>
       </div>
@@ -345,15 +358,15 @@ function openQuickView(id) {
   const body = document.getElementById('quickViewBody');
 
   body.innerHTML = `
-    <div><img src="${prod.image}" alt="${prod.name}" style="width:100%; height:400px; object-fit:cover; border-radius:4px;"></div>
+    <div><img class="quickview-image" src="${prod.image}" alt="${prod.name}"></div>
     <div>
       <span class="product-cat">${prod.categoryName}</span>
-      <h2 style="font-size:1.8rem; margin:8px 0;">${prod.name}</h2>
-      <div class="product-price" style="font-size:1.4rem; margin-bottom:16px;">${formatVND(prod.price)}</div>
-      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:20px;">${prod.desc}</p>
+      <h2 class="quickview-title">${prod.name}</h2>
+      <div class="product-price quickview-price">${formatVND(prod.price)}</div>
+      <p class="quickview-description">${prod.desc}</p>
       <div class="form-group"><label>Chọn Size</label><select id="qvSize">${prod.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select></div>
       <div class="form-group"><label>Chọn Màu</label><select id="qvColor">${prod.colors.map(c => `<option value="${c}">${c}</option>`).join('')}</select></div>
-      <button class="btn btn-accent btn-block" style="margin-top:20px;" onclick="addToCartFromQuickView('${prod.id}')">THÊM VÀO GIỎ HÀNG</button>
+      <button class="btn btn-accent btn-block quickview-add-to-cart" onclick="addToCartFromQuickView('${prod.id}')">THÊM VÀO GIỎ HÀNG</button>
     </div>
   `;
   modal.classList.add('active');
@@ -438,6 +451,38 @@ function closeCartDrawer() {
 }
 
 function initGlobalEvents() {
+  const mobileToggle = document.getElementById('mobileToggle');
+  const navLinks = document.getElementById('primary-navigation');
+  const navbar = document.getElementById('navbar');
+
+  mobileToggle.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('is-open');
+    const icon = mobileToggle.querySelector('i');
+
+    mobileToggle.setAttribute('aria-expanded', String(isOpen));
+    mobileToggle.setAttribute('aria-label', isOpen ? 'Đóng menu' : 'Mở menu');
+    icon.classList.toggle('fa-bars', !isOpen);
+    icon.classList.toggle('fa-xmark', isOpen);
+  });
+
+  navLinks.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', closeMobileNav);
+  });
+
+  document.addEventListener('click', event => {
+    if (navLinks.classList.contains('is-open') && !navbar.contains(event.target)) {
+      closeMobileNav();
+    }
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeMobileNav();
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 1100) closeMobileNav();
+  });
+
   document.getElementById('openCartBtn').addEventListener('click', openCartDrawer);
   document.getElementById('closeCartBtn').addEventListener('click', closeCartDrawer);
   document.getElementById('cartOverlay').addEventListener('click', closeCartDrawer);
