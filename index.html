@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>THANH LÂM - MAN CLOTHING | Modern & Minimalist Menswear</title>
-  <meta name="description" content="Thương hiệu thời trang nam hiện đại, lịch lãm và tối giản. Khám phá BST áo sơ mi, polo, quần tây và phụ kiện cao cấp.">
+  <title>THANH LÂM - MAN CLOTHING | Premium Minimalist Menswear</title>
+  <meta name="description" content="Thương hiệu thời trang nam tối giản, hiện đại và cao cấp. Khám phá BST áo sơ mi, polo, quần tây và trải nghiệm phối đồ tương tác.">
   
   <!-- Google Fonts & Font Awesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,7 +18,9 @@
 
   <!-- Top Announcement Bar -->
   <div class="top-bar">
-    <span>MIỄN PHÍ VẬN CHUYỂN CHO ĐƠN HÀNG TỪ 1.000.000đ • HOTLINE: 0988.XXX.XXX</span>
+    <div class="top-bar-content">
+      <span><i class="fa-solid fa-truck-fast"></i> MIỄN PHÍ VẬN CHUYỂN CHO ĐƠN HÀNG TỪ 1.000.000đ • HOTLINE: 0988.XXX.XXX</span>
+    </div>
   </div>
 
   <!-- Header / Navigation -->
@@ -26,7 +28,7 @@
     <div class="nav-container">
       <a href="#/" class="brand-logo">
         <span class="logo-text">THANH LÂM</span>
-        <span class="logo-sub">MAN CLOTHING</span>
+        <span class="logo-sub">ĐỐI TÁC MAN STORE</span>
       </a>
 
       <nav class="nav-links">
@@ -55,7 +57,7 @@
 
   <!-- Dynamic SPA Content Views Container -->
   <main id="app-view">
-    <!-- Nội dung sẽ được render động bằng app.js dựa trên Hash Route -->
+    <!-- Nội dung render bằng app.js dựa trên Hash Route -->
   </main>
 
   <!-- Marquee Tape -->
@@ -65,7 +67,7 @@
       <span>MODERN FIT</span><span class="dot">•</span>
       <span>THANH LAM MAN</span><span class="dot">•</span>
       <span>SHIPPED NATIONWIDE</span><span class="dot">•</span>
-      <span>MINIMALIST STREETWEAR</span><span class="dot">•</span>
+      <span>CACAO LUXE SERIES</span><span class="dot">•</span>
       <span>PREMIUM QUALITY</span><span class="dot">•</span>
       <span>MODERN FIT</span><span class="dot">•</span>
       <span>THANH LAM MAN</span><span class="dot">•</span>
@@ -78,6 +80,12 @@
     <a href="https://zalo.me" target="_blank" class="social-icon zalo" title="Chat Zalo"><i class="fa-solid fa-comment-dots"></i></a>
     <a href="https://facebook.com" target="_blank" class="social-icon facebook" title="Fanpage Facebook"><i class="fa-brands fa-facebook-f"></i></a>
     <a href="https://tiktok.com/@ThanhLamMan" target="_blank" class="social-icon tiktok" title="TikTok @ThanhLamMan"><i class="fa-brands fa-tiktok"></i></a>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-notification" id="toast">
+    <i class="fa-solid fa-circle-check"></i>
+    <span id="toastMessage">Đã thêm sản phẩm vào giỏ hàng!</span>
   </div>
 
   <!-- QuickView Modal -->
@@ -95,12 +103,10 @@
       <h3>GIỎ HÀNG CỦA BẠN (<span id="cartDrawerCount">0</span>)</h3>
       <button class="cart-close" id="closeCartBtn">&times;</button>
     </div>
-    <div class="cart-items" id="cartItemsList">
-      <!-- Items render bằng JS -->
-    </div>
+    <div class="cart-items" id="cartItemsList"></div>
     <div class="cart-footer">
       <div class="cart-total">
-        <span>Tổng tiền:</span>
+        <span>Tạm tính:</span>
         <strong id="cartTotalPrice">0đ</strong>
       </div>
       <button class="btn btn-primary btn-block" id="checkoutBtn">TIẾN HÀNH ĐẶT HÀNG</button>
@@ -126,7 +132,7 @@
           </div>
           <div class="form-group">
             <label for="customerAddress">Địa chỉ nhận hàng *</label>
-            <input type="text" id="customerAddress" required placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/TP">
+            <input type="text" id="customerAddress" required placeholder="Số nhà, tên đường, phường/xã, quận/huyện">
           </div>
           <div class="form-row">
             <div class="form-group">
@@ -165,15 +171,15 @@
     <div class="footer-container">
       <div class="footer-col">
         <h4 class="footer-brand">THANH LÂM MAN</h4>
-        <p>Thương hiệu thời trang nam tối giản, hiện đại và tinh tế. Nâng tầm phong cách sống cho quý ông hiện đại.</p>
+        <p>Thương hiệu thời trang nam tối giản, hiện đại và tinh tế. Nâng tầm phong thái cho người đàn ông Việt Nam.</p>
       </div>
       <div class="footer-col">
         <h5>DANH MỤC</h5>
         <ul>
-          <li><a href="#/san-pham">Áo Sơ Mi</a></li>
+          <li><a href="#/san-pham">Áo Sơ Mi Premium</a></li>
           <li><a href="#/san-pham">Áo Polo / T-Shirt</a></li>
-          <li><a href="#/san-pham">Quần Tây / Chino</a></li>
-          <li><a href="#/san-pham">Áo Khoác</a></li>
+          <li><a href="#/san-pham">Quần Tây Tailored</a></li>
+          <li><a href="#/san-pham">Áo Khoác Modern</a></li>
         </ul>
       </div>
       <div class="footer-col">
