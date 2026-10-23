@@ -200,6 +200,74 @@ function renderHomeView() {
     </section>
     ${renderCatalogView()}
     ${renderMixMatchView()}
+    ${renderCustomerFeedbackView()}
+  `;
+}
+
+function renderCustomerFeedbackView() {
+  const feedbackItems = [
+    {
+      initials: 'MA',
+      name: 'Minh Anh',
+      product: 'Áo sơ mi Linen',
+      rating: 5,
+      quote: 'Chất vải nhẹ, mặc thoáng và form gọn gàng. Dễ phối đồ cho cả ngày đi làm lẫn những buổi gặp gỡ.'
+    },
+    {
+      initials: 'TD',
+      name: 'Tuấn Đạt',
+      product: 'Áo Polo Pique',
+      rating: 5,
+      quote: 'Áo lên dáng chỉn chu mà vẫn thoải mái khi vận động. Tông màu tối giản nên phối với quần nào cũng hợp.'
+    },
+    {
+      initials: 'NA',
+      name: 'Nam Anh',
+      product: 'Quần Tây Tailored',
+      rating: 5,
+      quote: 'Form quần đứng, đường may tinh tế. Kết hợp cùng sơ mi là có ngay một set đồ lịch sự, hiện đại.'
+    }
+  ];
+
+  return `
+    <section class="customer-feedback-section scroll-reveal" aria-labelledby="customer-feedback-title">
+      <div class="feedback-section-header">
+        <div class="feedback-section-copy">
+          <span class="feedback-eyebrow">CHIA SẺ TRẢI NGHIỆM</span>
+          <h2 class="section-title" id="customer-feedback-title">KHÁCH HÀNG NÓI GÌ?</h2>
+          <p class="feedback-intro">Một góc nhỏ để giới thiệu trải nghiệm với những thiết kế Thanh Lâm.</p>
+        </div>
+        <span class="feedback-demo-label">
+          <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+          NỘI DUNG DEMO
+        </span>
+      </div>
+
+      <div class="feedback-grid">
+        ${feedbackItems.map(feedback => `
+          <article class="feedback-card">
+            <div class="feedback-card-header">
+              <span class="feedback-avatar" aria-hidden="true">${feedback.initials}</span>
+              <div class="feedback-customer">
+                <h3 class="feedback-customer-name">${feedback.name}</h3>
+                <span class="feedback-customer-label">Khách hàng mẫu</span>
+              </div>
+              <span class="feedback-quote-mark" aria-hidden="true">“</span>
+            </div>
+            <div class="feedback-stars" role="img" aria-label="Đánh giá mẫu ${feedback.rating} trên 5 sao">
+              <span aria-hidden="true">${'<i class="fa-solid fa-star"></i>'.repeat(feedback.rating)}</span>
+            </div>
+            <blockquote class="feedback-quote">${feedback.quote}</blockquote>
+            <div class="feedback-product">
+              <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+              <span>${feedback.product}</span>
+            </div>
+          </article>
+        `).join('')}
+      </div>
+
+      <p class="feedback-disclaimer">Tên, nhận xét và điểm số trên chỉ là nội dung minh họa cho bản demo, chưa phải đánh giá khách hàng đã xác thực.</p>
+    </section>
   `;
 }
 
