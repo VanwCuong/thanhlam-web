@@ -53,29 +53,65 @@ img {
 }
 
 /* ==========================================================================
-   HIỆU ỨNG CUỘN 2 CHIỀU (SCROLL REVEAL ANIMATIONS)
+   TWO-WAY SCROLL REVEAL
    ========================================================================== */
-.reveal-up,
-.reveal-left,
-.reveal-right {
+.has-scroll-reveal .scroll-reveal.reveal-ready {
+  transition: opacity 560ms ease, transform 560ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.has-scroll-reveal.is-initializing-scroll-reveal .scroll-reveal,
+.has-scroll-reveal.is-initializing-scroll-reveal .scroll-reveal .product-grid > * {
+  transition: none !important;
+}
+
+.has-scroll-reveal .scroll-reveal.reveal-ready:not(.is-visible) {
+  opacity: 0;
+  transform: translateX(-48px);
+}
+
+.has-scroll-reveal main > section.scroll-reveal.reveal-ready:not(.is-visible):nth-of-type(even) {
+  transform: translateX(48px);
+}
+
+.has-scroll-reveal main > section.scroll-reveal.reveal-ready.is-visible {
   opacity: 1;
-  transform: none;
-  transition: opacity 550ms var(--ease-standard), transform 350ms var(--ease-standard);
+  transform: translateX(0);
 }
 
-.has-scroll-reveal .reveal-up:not(.active) {
+.has-scroll-reveal .scroll-reveal.reveal-ready .product-grid > * {
   opacity: 0;
-  transform: translateY(24px);
+  translate: -22px 0;
+  transition:
+    opacity 460ms ease var(--scroll-reveal-delay, 0ms),
+    translate 460ms cubic-bezier(0.2, 0.7, 0.2, 1) var(--scroll-reveal-delay, 0ms),
+    transform var(--duration-base) var(--ease-standard),
+    box-shadow var(--duration-base) ease,
+    border-color var(--duration-base) ease;
 }
 
-.has-scroll-reveal .reveal-left:not(.active) {
-  opacity: 0;
-  transform: translateX(-32px);
+.has-scroll-reveal .scroll-reveal .product-grid > :nth-child(even) {
+  translate: 22px 0;
 }
 
-.has-scroll-reveal .reveal-right:not(.active) {
-  opacity: 0;
-  transform: translateX(32px);
+.has-scroll-reveal .scroll-reveal.reveal-ready.is-visible .product-grid > * {
+  opacity: 1;
+  translate: none;
+}
+
+.has-scroll-reveal .scroll-reveal.reveal-ready.is-visible .product-grid > :nth-child(2) {
+  --scroll-reveal-delay: 90ms;
+}
+
+.has-scroll-reveal .scroll-reveal.reveal-ready.is-visible .product-grid > :nth-child(3) {
+  --scroll-reveal-delay: 180ms;
+}
+
+.has-scroll-reveal .scroll-reveal.reveal-ready.is-visible .product-grid > :nth-child(4) {
+  --scroll-reveal-delay: 270ms;
+}
+
+.has-scroll-reveal .scroll-reveal.reveal-ready.is-visible .product-grid > :nth-child(5) {
+  --scroll-reveal-delay: 360ms;
 }
 
 /* ==========================================================================
@@ -1061,20 +1097,42 @@ img {
     scroll-behavior: auto;
   }
 
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
-    transition-delay: 0ms !important;
-    transition-duration: 0.01ms !important;
+  .marquee-content {
+    animation-duration: 36s;
   }
 
-  .has-scroll-reveal .reveal-up:not(.active),
-  .has-scroll-reveal .reveal-left:not(.active),
-  .has-scroll-reveal .reveal-right:not(.active) {
-    opacity: 1;
-    transform: none;
+  .has-scroll-reveal .scroll-reveal.reveal-ready {
+    transition: opacity 400ms ease, transform 400ms ease;
+  }
+
+  .has-scroll-reveal .scroll-reveal.reveal-ready:not(.is-visible) {
+    transform: translateX(-12px);
+  }
+
+  .has-scroll-reveal main > section.scroll-reveal.reveal-ready:not(.is-visible):nth-of-type(even) {
+    transform: translateX(12px);
+  }
+
+  .has-scroll-reveal main > section.scroll-reveal.reveal-ready.is-visible {
+    transform: translateX(0);
+  }
+
+  .has-scroll-reveal .scroll-reveal.reveal-ready .product-grid > * {
+    translate: -8px 0;
+    transition:
+      opacity 260ms ease var(--scroll-reveal-delay, 0ms),
+      translate 260ms ease var(--scroll-reveal-delay, 0ms),
+      transform var(--duration-base) var(--ease-standard),
+      box-shadow var(--duration-base) ease,
+      border-color var(--duration-base) ease;
+  }
+
+  .has-scroll-reveal .scroll-reveal.reveal-ready .product-grid > :nth-child(even) {
+    translate: 8px 0;
+  }
+
+  .has-scroll-reveal .scroll-reveal.reveal-ready.is-visible .product-grid > * {
+    translate: none;
+    --scroll-reveal-delay: 0ms;
   }
 }
