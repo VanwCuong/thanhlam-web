@@ -2,7 +2,7 @@
    THANH LÂM - MAN CLOTHING | ENGINE & SCROLL OBSERVER
    ========================================================================== */
 
-const SHEET_URL = "https://docs.google.com/spreadsheets/d/1SFx-H3QB3T5yJiJiwPPWJr4WEKVytyksE0CZAiujoQI/edit?pli=1&gid=0#gid=0";
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/1SFx-H3QB3T5yJiJiwPPWJr4WEKVytyksE0CZAiujoQI/edit?usp=sharing";
 
 const supportsScrollReveal = 'IntersectionObserver' in window;
 
