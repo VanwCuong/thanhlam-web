@@ -5,9 +5,6 @@
 const SHEET_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
 
 const supportsScrollReveal = 'IntersectionObserver' in window;
-if (supportsScrollReveal) {
-  document.documentElement.classList.add('has-scroll-reveal');
-}
 
 const PRODUCTS = [
   {
@@ -89,31 +86,47 @@ function formatVND(amount) {
 
 // Hàm khởi tạo hiệu ứng cuộn 2 chiều (Intersection Observer)
 function initScrollAnimations() {
-  if (!supportsScrollReveal) return;
+  const revealSections = document.querySelectorAll('#app-view > section');
+  revealSections.forEach(section => section.classList.add('scroll-reveal'));
 
-  document.querySelectorAll('.catalog-section, .mix-match-section, .hero-section').forEach(el => {
-    el.classList.add('reveal-up');
+  if (!supportsScrollReveal) {
+    revealSections.forEach(section => section.classList.add('is-visible'));
+    return;
+  }
+
+  const viewportBottom = window.innerHeight - 50;
+  const initialVisibility = Array.from(revealSections, section => {
+    const rect = section.getBoundingClientRect();
+    const visibleHeight = Math.max(0, Math.min(rect.bottom, viewportBottom) - Math.max(rect.top, 0));
+    return visibleHeight > 0;
   });
-  document.querySelectorAll('.product-card').forEach(el => {
-    el.classList.add('reveal-up');
+
+  document.documentElement.classList.add('has-scroll-reveal', 'is-initializing-scroll-reveal');
+  revealSections.forEach((section, index) => {
+    section.classList.add('reveal-ready');
+    section.classList.toggle('is-visible', initialVisibility[index]);
   });
+  void document.documentElement.offsetHeight;
+  document.documentElement.classList.remove('is-initializing-scroll-reveal');
 
   if (!scrollObserver) {
     scrollObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        entry.target.classList.toggle('active', entry.isIntersecting);
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        } else if (window.scrollY < entry.boundingClientRect.top + window.scrollY) {
+          entry.target.classList.remove('is-visible');
+        }
       });
     }, {
       root: null,
-      rootMargin: '0px',
+      rootMargin: '0px 0px -50px 0px',
       threshold: 0.15
     });
   }
 
   scrollObserver.disconnect();
-  document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right').forEach(el => {
-    scrollObserver.observe(el);
-  });
+  revealSections.forEach(section => scrollObserver.observe(section));
 }
 
 function handleRouting() {
@@ -151,8 +164,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function renderHomeView() {
   return `
-    <section class="hero-section">
-      <div class="hero-text reveal-left">
+    <section class="hero-section scroll-reveal">
+      <div class="hero-text">
         <h1 class="hero-title-outline">THANH LÂM</h1>
         <h1 class="hero-title-solid">MAN CLOTHING</h1>
         <p class="hero-subtitle">Phong cách thời trang nam tối giản, hiện đại và lịch lãm. Tự tin khẳng định khí chất trong từng chi tiết.</p>
@@ -161,7 +174,7 @@ function renderHomeView() {
           <a href="#/mix-match" class="btn btn-outline"><i class="fa-solid fa-wand-magic-sparkles"></i> PHỐI ĐỒ STUDIO</a>
         </div>
       </div>
-      <div class="hero-gallery reveal-right">
+      <div class="hero-gallery">
         <div class="polaroid-card card-1">
           <img src="${PRODUCTS[0].image}" alt="Lookbook 1">
           <div class="polaroid-caption">Linen Modern Fit</div>
@@ -179,7 +192,7 @@ function renderHomeView() {
 
 function renderCatalogView() {
   return `
-    <section class="catalog-section">
+    <section class="catalog-section scroll-reveal">
       <div class="section-header">
         <h2 class="section-title">BỘ SƯU TẬP SẢN PHẨM</h2>
         <div class="category-filters">
@@ -201,7 +214,7 @@ function renderCatalogView() {
 
 function renderProductCards(items) {
   return items.map(prod => `
-    <div class="product-card reveal-up">
+    <div class="product-card">
       <div class="product-thumb">
         <img src="${prod.image}" alt="${prod.name}">
         <div class="product-actions">
@@ -225,7 +238,7 @@ function renderMixMatchView() {
   const accessories = PRODUCTS.filter(p => p.category === 'phu-kien' || p.category === 'ao-khoac');
 
   return `
-    <section class="mix-match-section reveal-up">
+    <section class="mix-match-section scroll-reveal">
       <div class="section-header">
         <h2 class="section-title"><i class="fa-solid fa-wand-magic-sparkles"></i> MIX & MATCH STUDIO</h2>
         <p>Thử phối trang phục trực tiếp để tạo bộ outfit nam tính chuẩn GU trước khi chốt đơn.</p>
@@ -291,7 +304,7 @@ function renderMixMatchView() {
 
 function renderAboutView() {
   return `
-    <section class="reveal-up" style="max-width: 900px; margin: 60px auto; padding: 0 24px;">
+    <section class="scroll-reveal" style="max-width: 900px; margin: 60px auto; padding: 0 24px;">
       <h2 style="font-size:2.5rem; font-weight:800; margin-bottom: 20px;">CÂU CHUYỆN THANH LÂM MAN</h2>
       <p style="font-size:1.1rem; line-height: 1.8; margin-bottom: 20px;">
         Được thành lập với sứ mệnh định hình phong cách ăn mặc nam tính hiện đại, <strong>THANH LÂM - MAN CLOTHING</strong> theo đuổi triết lý <em>Minimalist & Contemporary Streetwear</em>.
@@ -302,7 +315,7 @@ function renderAboutView() {
 
 function renderContactView() {
   return `
-    <section class="reveal-up" style="max-width: 900px; margin: 60px auto; padding: 0 24px; text-align:center;">
+    <section class="scroll-reveal" style="max-width: 900px; margin: 60px auto; padding: 0 24px; text-align:center;">
       <h2 style="font-size:2.5rem; font-weight:800; margin-bottom: 20px;">LIÊN HỆ VỚI CHÚNG TÔI</h2>
       <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-top:30px;">
         <a href="https://zalo.me" target="_blank" class="btn btn-primary"><i class="fa-solid fa-comment-dots"></i> CHAT ZALO CSKH</a>
@@ -322,7 +335,6 @@ function filterCategory(cat, btn) {
     const filtered = PRODUCTS.filter(p => p.category === cat);
     grid.innerHTML = renderProductCards(filtered);
   }
-  initScrollAnimations();
 }
 
 function openQuickView(id) {
