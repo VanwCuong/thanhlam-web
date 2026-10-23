@@ -259,38 +259,38 @@ function renderMixMatchView() {
 
       <div class="studio-grid">
         <div class="studio-selectors">
-          <div class="selector-group">
+          <div class="selector-group" data-mix-type="top">
             <label>1. Chọn Áo Top</label>
             <div class="selector-options">
               ${tops.map(p => `
-                <div class="option-item ${selectedMix.top.id === p.id ? 'selected' : ''}" onclick="selectMixItem('top', '${p.id}')">
-                  <img src="${p.image}" alt="${p.name}">
+                <button type="button" class="option-item ${selectedMix.top.id === p.id ? 'selected' : ''}" data-product-id="${p.id}" aria-pressed="${selectedMix.top.id === p.id}">
+                  <img src="${p.image}" alt="">
                   <span>${p.name}</span>
-                </div>
+                </button>
               `).join('')}
             </div>
           </div>
 
-          <div class="selector-group">
+          <div class="selector-group" data-mix-type="bottom">
             <label>2. Chọn Quần Bottom</label>
             <div class="selector-options">
               ${bottoms.map(p => `
-                <div class="option-item ${selectedMix.bottom.id === p.id ? 'selected' : ''}" onclick="selectMixItem('bottom', '${p.id}')">
-                  <img src="${p.image}" alt="${p.name}">
+                <button type="button" class="option-item ${selectedMix.bottom.id === p.id ? 'selected' : ''}" data-product-id="${p.id}" aria-pressed="${selectedMix.bottom.id === p.id}">
+                  <img src="${p.image}" alt="">
                   <span>${p.name}</span>
-                </div>
+                </button>
               `).join('')}
             </div>
           </div>
 
-          <div class="selector-group">
+          <div class="selector-group" data-mix-type="accessory">
             <label>3. Khoác / Phụ Kiện</label>
             <div class="selector-options">
               ${accessories.map(p => `
-                <div class="option-item ${selectedMix.accessory.id === p.id ? 'selected' : ''}" onclick="selectMixItem('accessory', '${p.id}')">
-                  <img src="${p.image}" alt="${p.name}">
+                <button type="button" class="option-item ${selectedMix.accessory.id === p.id ? 'selected' : ''}" data-product-id="${p.id}" aria-pressed="${selectedMix.accessory.id === p.id}">
+                  <img src="${p.image}" alt="">
                   <span>${p.name}</span>
-                </div>
+                </button>
               `).join('')}
             </div>
           </div>
@@ -298,16 +298,16 @@ function renderMixMatchView() {
 
         <div class="studio-preview">
           <div class="outfit-display">
-            <div class="outfit-slot"><img src="${selectedMix.top.image}"></div>
-            <div class="outfit-slot"><img src="${selectedMix.bottom.image}"></div>
-            <div class="outfit-slot"><img src="${selectedMix.accessory.image}"></div>
+            <div class="outfit-slot" data-mix-slot="top"><img src="${selectedMix.top.image}" alt="${selectedMix.top.name}"></div>
+            <div class="outfit-slot" data-mix-slot="bottom"><img src="${selectedMix.bottom.image}" alt="${selectedMix.bottom.name}"></div>
+            <div class="outfit-slot" data-mix-slot="accessory"><img src="${selectedMix.accessory.image}" alt="${selectedMix.accessory.name}"></div>
           </div>
           <div class="outfit-summary">
             <h4>TỔNG CỘNG OUTFIT</h4>
-            <p style="font-size:1.3rem; font-weight:800; color:var(--accent-color); margin: 8px 0;">
+            <p class="outfit-total" aria-live="polite" style="font-size:1.3rem; font-weight:800; color:var(--accent-color); margin: 8px 0;">
               ${formatVND(selectedMix.top.price + selectedMix.bottom.price + selectedMix.accessory.price)}
             </p>
-            <button class="btn btn-accent btn-block" onclick="addMixToCart()">THÊM TRỌN BỘ VÀO GIỎ</button>
+            <button type="button" class="btn btn-accent btn-block" data-mix-add-to-cart>THÊM TRỌN BỘ VÀO GIỎ</button>
           </div>
         </div>
       </div>
@@ -388,8 +388,26 @@ function triggerCartBump() {
 }
 
 function selectMixItem(type, id) {
+  if (!Object.prototype.hasOwnProperty.call(selectedMix, type)) return;
+
   const prod = PRODUCTS.find(p => p.id === id);
-  if (prod) { selectedMix[type] = prod; handleRouting(); }
+  const section = document.querySelector('.mix-match-section');
+  const group = section?.querySelector(`.selector-group[data-mix-type="${type}"]`);
+  if (!prod || !section || !group) return;
+
+  selectedMix[type] = prod;
+  group.querySelectorAll('.option-item').forEach(option => {
+    const isSelected = option.dataset.productId === prod.id;
+    option.classList.toggle('selected', isSelected);
+    option.setAttribute('aria-pressed', String(isSelected));
+  });
+
+  const previewImage = section.querySelector(`.outfit-slot[data-mix-slot="${type}"] img`);
+  previewImage.src = prod.image;
+  previewImage.alt = prod.name;
+
+  const total = Object.values(selectedMix).reduce((sum, item) => sum + item.price, 0);
+  section.querySelector('.outfit-total').textContent = formatVND(total);
 }
 
 function addMixToCart() {
@@ -454,6 +472,21 @@ function initGlobalEvents() {
   const mobileToggle = document.getElementById('mobileToggle');
   const navLinks = document.getElementById('primary-navigation');
   const navbar = document.getElementById('navbar');
+  const appView = document.getElementById('app-view');
+
+  appView.addEventListener('click', event => {
+    if (!(event.target instanceof Element)) return;
+
+    const option = event.target.closest('.option-item[data-product-id]');
+    if (option && appView.contains(option)) {
+      const group = option.closest('.selector-group[data-mix-type]');
+      if (group) selectMixItem(group.dataset.mixType, option.dataset.productId);
+      return;
+    }
+
+    const addButton = event.target.closest('[data-mix-add-to-cart]');
+    if (addButton && appView.contains(addButton)) addMixToCart();
+  });
 
   mobileToggle.addEventListener('click', () => {
     const isOpen = navLinks.classList.toggle('is-open');
