@@ -2,6 +2,7 @@
    THANH LÂM - MAN CLOTHING | ENGINE & SCROLL OBSERVER
    ========================================================================== */
 
+// Set this to the deployed Google Apps Script Web App URL ending in /exec.
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbyNuoBYZooduQKXJSsx0FvFWXmPeuNnNN3aCDmVchXLIFE6y0jQ9thYd2hCHjrxjjIm/exec";
 
 const supportsScrollReveal = 'IntersectionObserver' in window;
@@ -82,6 +83,17 @@ function showToast(message) {
 
 function formatVND(amount) {
   return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+}
+
+function isGoogleAppsScriptWebAppUrl(value) {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' &&
+      url.hostname === 'script.google.com' &&
+      /^\/macros\/s\/[^/]+\/exec$/.test(url.pathname);
+  } catch {
+    return false;
+  }
 }
 
 // Hàm khởi tạo hiệu ứng cuộn 2 chiều (Intersection Observer)
@@ -612,6 +624,15 @@ function openCheckoutModal() {
 async function handleOrderSubmit(e) {
   e.preventDefault();
   const submitBtn = document.getElementById('submitOrderBtn');
+  if (submitBtn.disabled) return;
+
+  if (!isGoogleAppsScriptWebAppUrl(SHEET_URL)) {
+    alert('Google Sheets chưa được kết nối. Hãy cấu hình URL Web App Apps Script kết thúc bằng /exec; link chỉnh sửa Google Sheet không thể nhận đơn trực tiếp.');
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.setAttribute('aria-busy', 'true');
   submitBtn.classList.add('loading');
   const orderData = {
     customerName: document.getElementById('customerName').value,
@@ -625,17 +646,38 @@ async function handleOrderSubmit(e) {
     orderDate: new Date().toLocaleString('vi-VN')
   };
   try {
-    if (SHEET_URL !== "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE") {
-      await fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData) });
+    const response = await fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+      body: JSON.stringify(orderData)
+    });
+
+    if (response.type === 'opaque') {
+      alert('Yêu cầu đã được gửi tới Apps Script nhưng trình duyệt không thể xác nhận dữ liệu đã được ghi vào Sheet. Giỏ hàng vẫn được giữ lại. Hãy kiểm tra Sheet trước khi gửi lại để tránh tạo đơn trùng.');
+      return;
     }
-    showToast('Đặt hàng thành công! Cảm ơn bạn.');
+
+    if (!response.ok) {
+      throw new Error(`Google Apps Script returned HTTP ${response.status}`);
+    }
+
+    const result = await response.json();
+    if (!result || result.ok !== true) {
+      throw new Error('Google Apps Script did not confirm the order');
+    }
+
+    showToast('Đơn hàng đã được ghi nhận. Cảm ơn bạn.');
     cart = [];
     saveCart();
     document.getElementById('checkoutModal').classList.remove('active');
     document.getElementById('orderForm').reset();
   } catch (error) {
-    alert('Có lỗi xảy ra, vui lòng thử lại!');
+    console.error('Google Sheets order submission failed:', error);
+    alert('Không xác nhận được đơn hàng. Giỏ hàng vẫn được giữ lại; hãy kiểm tra Google Sheet trước khi thử gửi lại.');
   } finally {
+    submitBtn.disabled = false;
+    submitBtn.removeAttribute('aria-busy');
     submitBtn.classList.remove('loading');
   }
 }
