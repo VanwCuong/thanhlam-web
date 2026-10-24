@@ -4,6 +4,7 @@
 
 // Set this to the deployed Google Apps Script Web App URL ending in /exec.
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbyNuoBYZooduQKXJSsx0FvFWXmPeuNnNN3aCDmVchXLIFE6y0jQ9thYd2hCHjrxjjIm/exec";
+const ZALO_CHAT_URL = 'https://zalo.me/0349595949';
 
 const supportsScrollReveal = 'IntersectionObserver' in window;
 const POLO_IMAGES = [
@@ -618,11 +619,11 @@ async function handleOrderSubmit(e) {
       throw new Error(result?.error || 'Apps Script từ chối đơn hàng nhưng không trả lý do. Hãy cập nhật và triển khai phiên bản mới nhất của GoogleAppsScript.gs.');
     }
 
-    showToast('Đơn hàng đã được ghi nhận. Cảm ơn bạn.');
     cart = [];
     saveCart();
     document.getElementById('checkoutModal').classList.remove('active');
     document.getElementById('orderForm').reset();
+    window.location.assign(ZALO_CHAT_URL);
   } catch (error) {
     console.error('Google Sheets order submission failed:', error);
     const detail = error instanceof Error ? error.message : String(error);
