@@ -7,12 +7,12 @@ const SHEET_URL = "https://script.google.com/macros/s/AKfycbyNuoBYZooduQKXJSsx0F
 
 const supportsScrollReveal = 'IntersectionObserver' in window;
 const POLO_IMAGES = [
-  'assets/products/ao-polo-1.jpg',
-  'assets/products/ao-polo-2.jpg',
-  'assets/products/ao-polo-3.jpg',
-  'assets/products/ao-polo-4.jpg',
-  'assets/products/ao-polo-5.jpg',
-  'assets/products/ao-polo-6.jpg'
+  'products/11ffcec7-9c04-4ce5-ac12-5e109484cd40.jpg',
+  'products/34775178-7c90-4634-bc3e-8b7cb9497d7d.jpg',
+  'products/5cdd26a8-b4f0-48cd-9e21-2aa136c8d0bf.jpg',
+  'products/6417f8d8-b93a-4d10-bc97-111d0a63caaf.jpg',
+  'products/bc2c1c8b-4237-4486-a667-ec1001320667.jpg',
+  'products/c8e2c0a4-3115-4301-8037-14e88010a5fd.jpg'
 ];
 
 const PRODUCTS = [
@@ -39,23 +39,12 @@ const PRODUCTS = [
     desc: ''
   })),
   {
-    id: 'tl-03',
-    name: 'Quần Tây Tailored Trouser',
-    category: 'quan',
-    categoryName: 'Quần Tây',
-    price: 550000,
-    image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=800&q=80',
-    colors: ['Đen', 'Xám Đậm'],
-    sizes: ['S', 'M', 'L', 'XL'],
-    desc: 'Cắt may chuẩn Minimalist, chất liệu Wool blend đứng form không nhăn.'
-  },
-  {
     id: 'tl-06',
     name: 'Áo Khoác',
     category: 'ao-khoac',
     categoryName: 'Áo Khoác',
     price: 890000,
-    image: 'assets/products/ao-khoac-len-1.jpg',
+    image: 'products/111d7800-4174-49e2-953b-49a1e00c29ff.jpg',
     colors: ['Xám'],
     sizes: ['M', 'L', 'XL'],
     desc: ''
@@ -66,7 +55,7 @@ const PRODUCTS = [
     category: 'ao-khoac',
     categoryName: 'Áo Khoác',
     price: 890000,
-    image: 'assets/products/ao-khoac-len-2.jpg',
+    image: 'products/59911f06-5e59-4b3b-89bb-457228dc73fc.jpg',
     colors: ['Đen'],
     sizes: ['M', 'L', 'XL'],
     desc: ''
@@ -76,8 +65,7 @@ const PRODUCTS = [
 let cart = JSON.parse(localStorage.getItem('THANH_LAM_CART')) || [];
 let selectedMix = {
   top: PRODUCTS.find(product => product.category === 'polo'),
-  bottom: PRODUCTS.find(product => product.category === 'quan'),
-  accessory: PRODUCTS.find(product => product.category === 'ao-khoac')
+  jacket: PRODUCTS.find(product => product.category === 'ao-khoac')
 };
 let scrollObserver = null;
 
@@ -228,66 +216,53 @@ function renderHomeView() {
 function renderCustomerFeedbackView() {
   const feedbackItems = [
     {
-      initials: 'MA',
-      name: 'Minh Anh',
-      product: 'Áo sơ mi Linen',
-      rating: 5,
-      quote: 'Chất vải nhẹ, mặc thoáng và form gọn gàng. Dễ phối đồ cho cả ngày đi làm lẫn những buổi gặp gỡ.'
+      category: 'Áo Polo',
+      quote: 'Áo mặc thoải mái, hình thức đẹp và dễ phối đồ hằng ngày.'
     },
     {
-      initials: 'TD',
-      name: 'Tuấn Đạt',
-      product: 'Áo Polo Pique',
-      rating: 5,
-      quote: 'Áo lên dáng chỉn chu mà vẫn thoải mái khi vận động. Tông màu tối giản nên phối với quần nào cũng hợp.'
+      category: 'Áo Khoác',
+      quote: 'Áo len lên dáng đẹp, chất vải mềm và giữ ấm tốt.'
     },
     {
-      initials: 'NA',
-      name: 'Nam Anh',
-      product: 'Quần Tây Tailored',
-      rating: 5,
-      quote: 'Form quần đứng, đường may tinh tế. Kết hợp cùng sơ mi là có ngay một set đồ lịch sự, hiện đại.'
+      category: 'Dịch vụ',
+      quote: 'Được tư vấn nhiệt tình, đặt hàng nhanh và thuận tiện.'
     }
   ];
 
   return `
     <section class="customer-feedback-section scroll-reveal" aria-labelledby="customer-feedback-title">
-      <div class="feedback-section-header">
-        <div class="feedback-section-copy">
-          <span class="feedback-eyebrow">CHIA SẺ TRẢI NGHIỆM</span>
-          <h2 class="section-title" id="customer-feedback-title">KHÁCH HÀNG NÓI GÌ?</h2>
-          <p class="feedback-intro">Một góc nhỏ để giới thiệu trải nghiệm với những thiết kế Thanh Lâm.</p>
-        </div>
-        <span class="feedback-demo-label">
-          <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-          NỘI DUNG DEMO
-        </span>
+      <div class="feedback-heading">
+        <span class="feedback-eyebrow">CHIA SẺ TRẢI NGHIỆM</span>
+        <h2 class="section-title" id="customer-feedback-title">FEEDBACK KHÁCH HÀNG</h2>
+        <p>Cảm nhận tham khảo về sản phẩm và dịch vụ của Thanh Lâm.</p>
       </div>
 
       <div class="feedback-grid">
         ${feedbackItems.map(feedback => `
           <article class="feedback-card">
-            <div class="feedback-card-header">
-              <span class="feedback-avatar" aria-hidden="true">${feedback.initials}</span>
-              <div class="feedback-customer">
-                <h3 class="feedback-customer-name">${feedback.name}</h3>
-                <span class="feedback-customer-label">Khách hàng mẫu</span>
-              </div>
-              <span class="feedback-quote-mark" aria-hidden="true">“</span>
-            </div>
-            <div class="feedback-stars" role="img" aria-label="Đánh giá mẫu ${feedback.rating} trên 5 sao">
-              <span aria-hidden="true">${'<i class="fa-solid fa-star"></i>'.repeat(feedback.rating)}</span>
+            <div class="feedback-stars" role="img" aria-label="5 sao">
+              ${'<i class="fa-solid fa-star" aria-hidden="true"></i>'.repeat(5)}
             </div>
             <blockquote class="feedback-quote">${feedback.quote}</blockquote>
-            <div class="feedback-product">
-              <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-              <span>${feedback.product}</span>
-            </div>
+            <span class="feedback-category">${feedback.category}</span>
           </article>
         `).join('')}
       </div>
 
-      <p class="feedback-disclaimer">Tên, nhận xét và điểm số trên chỉ là nội dung minh họa cho bản demo, chưa phải đánh giá khách hàng đã xác thực.</p>
+      <div class="feedback-invitation">
+        <div class="feedback-copy">
+          <h3>Còn bạn thì sao?</h3>
+          <p>Có hài lòng với dịch vụ không? Cho chúng tôi biết thêm nhé!</p>
+        </div>
+        <div class="feedback-actions">
+          <a class="btn btn-primary" href="https://zalo.me/0349595949" target="_blank" rel="noopener noreferrer">
+            <i class="fa-solid fa-comment-dots"></i> GỬI FEEDBACK QUA ZALO
+          </a>
+          <a class="btn btn-outline" href="https://www.facebook.com/share/1Gv2RrQ35y/" target="_blank" rel="noopener noreferrer">
+            <i class="fa-brands fa-facebook"></i> FACEBOOK
+          </a>
+        </div>
+      </div>
     </section>
   `;
 }
@@ -336,8 +311,7 @@ function renderProductCards(items) {
 
 function renderMixMatchView() {
   const tops = PRODUCTS.filter(p => p.category === 'polo');
-  const bottoms = PRODUCTS.filter(p => p.category === 'quan');
-  const accessories = PRODUCTS.filter(p => p.category === 'phu-kien' || p.category === 'ao-khoac');
+  const jackets = PRODUCTS.filter(p => p.category === 'ao-khoac');
 
   return `
     <section class="mix-match-section scroll-reveal">
@@ -360,23 +334,11 @@ function renderMixMatchView() {
             </div>
           </div>
 
-          <div class="selector-group" data-mix-type="bottom">
-            <label>2. Chọn Quần Bottom</label>
+          <div class="selector-group" data-mix-type="jacket">
+            <label>2. Chọn Áo Khoác</label>
             <div class="selector-options">
-              ${bottoms.map(p => `
-                <button type="button" class="option-item ${selectedMix.bottom.id === p.id ? 'selected' : ''}" data-product-id="${p.id}" aria-pressed="${selectedMix.bottom.id === p.id}">
-                  <img src="${p.image}" alt="">
-                  <span>${p.categoryName}</span>
-                </button>
-              `).join('')}
-            </div>
-          </div>
-
-          <div class="selector-group" data-mix-type="accessory">
-            <label>3. Khoác / Phụ Kiện</label>
-            <div class="selector-options">
-              ${accessories.map(p => `
-                <button type="button" class="option-item ${selectedMix.accessory.id === p.id ? 'selected' : ''}" data-product-id="${p.id}" aria-pressed="${selectedMix.accessory.id === p.id}">
+              ${jackets.map(p => `
+                <button type="button" class="option-item ${selectedMix.jacket.id === p.id ? 'selected' : ''}" data-product-id="${p.id}" aria-pressed="${selectedMix.jacket.id === p.id}">
                   <img src="${p.image}" alt="">
                   <span>${p.categoryName}</span>
                 </button>
@@ -388,13 +350,12 @@ function renderMixMatchView() {
         <div class="studio-preview">
           <div class="outfit-display">
             <div class="outfit-slot" data-mix-slot="top"><img src="${selectedMix.top.image}" alt="${selectedMix.top.categoryName}"></div>
-            <div class="outfit-slot" data-mix-slot="bottom"><img src="${selectedMix.bottom.image}" alt="${selectedMix.bottom.categoryName}"></div>
-            <div class="outfit-slot" data-mix-slot="accessory"><img src="${selectedMix.accessory.image}" alt="${selectedMix.accessory.categoryName}"></div>
+            <div class="outfit-slot" data-mix-slot="jacket"><img src="${selectedMix.jacket.image}" alt="${selectedMix.jacket.categoryName}"></div>
           </div>
           <div class="outfit-summary">
             <h4>TỔNG CỘNG OUTFIT</h4>
             <p class="outfit-total" aria-live="polite" style="font-size:1.3rem; font-weight:800; color:var(--accent-color); margin: 8px 0;">
-              ${formatVND(selectedMix.top.price + selectedMix.bottom.price + selectedMix.accessory.price)}
+              ${formatVND(selectedMix.top.price + selectedMix.jacket.price)}
             </p>
             <button type="button" class="btn btn-accent btn-block" data-mix-add-to-cart>THÊM TRỌN BỘ VÀO GIỎ</button>
           </div>
@@ -488,7 +449,7 @@ function selectMixItem(type, id) {
 }
 
 function addMixToCart() {
-  ['top', 'bottom', 'accessory'].forEach(key => {
+  ['top', 'jacket'].forEach(key => {
     const item = selectedMix[key];
     cart.push({ ...item, selectedSize: item.sizes[0], selectedColor: item.colors[0], cartId: Date.now() + Math.random() });
   });
