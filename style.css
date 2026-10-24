@@ -396,10 +396,7 @@ img {
 
 .polaroid-card {
   position: absolute;
-  background: white;
-  padding: 12px 12px 24px 12px;
-  box-shadow: var(--shadow-lg);
-  border: 1px solid var(--border-color);
+  overflow: hidden;
   width: 270px;
   transition: transform 400ms var(--ease-standard);
 }
@@ -488,6 +485,17 @@ img {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 2px;
+}
+
+.product-category-section + .product-category-section {
+  margin-top: 56px;
+}
+
+.product-category-title {
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
 }
 
 .customer-feedback-section {
@@ -680,21 +688,16 @@ img {
 
 .product-card {
   min-width: 0;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  transition: opacity 550ms var(--ease-standard), transform var(--duration-base) var(--ease-standard), box-shadow var(--duration-base) ease, border-color var(--duration-base) ease;
+  transition: opacity 550ms var(--ease-standard), transform var(--duration-base) var(--ease-standard);
   position: relative;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: 4px;
 }
 
 .product-card:hover,
 .product-card:focus-within {
   transform: translateY(-6px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--accent-color);
 }
 
 .product-thumb {
@@ -734,10 +737,11 @@ img {
 }
 
 .product-info {
-  padding: 18px;
+  padding: 14px 0;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  gap: 4px;
 }
 
 .product-cat {
@@ -877,18 +881,17 @@ img {
 .outfit-slot {
   width: 100%;
   height: 140px;
-  border: 1px dashed var(--border-color);
   display: flex;
   align-items: center;
   justify-content: center;
   background: white;
-  border-radius: 4px;
   overflow: hidden;
 }
 
 .outfit-slot img {
-  max-height: 100%;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .outfit-summary {
@@ -1083,7 +1086,7 @@ img {
   width: 100%;
   height: 400px;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: 0;
 }
 
 .quickview-title {
@@ -1268,6 +1271,7 @@ img {
   transform: translateY(-4px) scale(1.1);
 }
 
+.social-icon.phone { background: #16864a; }
 .social-icon.zalo { background: #0068FF; }
 .social-icon.facebook { background: #1877F2; }
 .social-icon.tiktok { background: #0D0D0D; }
@@ -1546,7 +1550,6 @@ img {
 
   .polaroid-card {
     width: min(72vw, 240px);
-    padding: 9px 9px 18px;
   }
 
   .polaroid-card img {
@@ -1562,9 +1565,7 @@ img {
   }
 
   .polaroid-caption {
-    margin-top: 8px;
-    font-size: 0.68rem;
-    letter-spacing: 0.06em;
+    display: none;
   }
 
   .catalog-section,
@@ -1614,7 +1615,7 @@ img {
   }
 
   .product-info {
-    padding: 12px;
+    padding: 10px 0;
   }
 
   .product-cat {
