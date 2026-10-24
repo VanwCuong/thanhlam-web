@@ -303,7 +303,6 @@ function renderProductCards(items) {
       </div>
       <div class="product-info">
         <span class="product-cat">${prod.categoryName}</span>
-        <div class="product-price">${formatVND(prod.price)}</div>
       </div>
     </div>
   `).join('');
@@ -353,10 +352,6 @@ function renderMixMatchView() {
             <div class="outfit-slot" data-mix-slot="jacket"><img src="${selectedMix.jacket.image}" alt="${selectedMix.jacket.categoryName}"></div>
           </div>
           <div class="outfit-summary">
-            <h4>TỔNG CỘNG OUTFIT</h4>
-            <p class="outfit-total" aria-live="polite" style="font-size:1.3rem; font-weight:800; color:var(--accent-color); margin: 8px 0;">
-              ${formatVND(selectedMix.top.price + selectedMix.jacket.price)}
-            </p>
             <button type="button" class="btn btn-accent btn-block" data-mix-add-to-cart>THÊM TRỌN BỘ VÀO GIỎ</button>
           </div>
         </div>
@@ -401,7 +396,6 @@ function openQuickView(id) {
     <div><img class="quickview-image" src="${prod.image}" alt="${prod.categoryName}"></div>
     <div>
       <span class="product-cat">${prod.categoryName}</span>
-      <div class="product-price quickview-price">${formatVND(prod.price)}</div>
       <div class="form-group"><label>Chọn Size</label><select id="qvSize">${prod.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select></div>
       <div class="form-group"><label>Chọn Màu</label><select id="qvColor">${prod.colors.map(c => `<option value="${c}">${c}</option>`).join('')}</select></div>
       <button class="btn btn-accent btn-block quickview-add-to-cart" onclick="addToCartFromQuickView('${prod.id}')">THÊM VÀO GIỎ HÀNG</button>
@@ -444,8 +438,6 @@ function selectMixItem(type, id) {
   previewImage.src = prod.image;
   previewImage.alt = prod.categoryName;
 
-  const total = Object.values(selectedMix).reduce((sum, item) => sum + item.price, 0);
-  section.querySelector('.outfit-total').textContent = formatVND(total);
 }
 
 function addMixToCart() {
@@ -482,7 +474,6 @@ function updateCartUI() {
         <div class="cart-item-details">
           <div class="cart-item-title">${item.categoryName}</div>
           <div class="cart-item-meta">Size: ${item.selectedSize} | Màu: ${item.selectedColor}</div>
-          <div class="cart-item-price">${formatVND(item.price)}</div>
         </div>
         <button onclick="removeFromCart(${item.cartId})" style="background:none; border:none; color:#888; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
       </div>
@@ -573,7 +564,7 @@ function openCheckoutModal() {
   let total = 0;
   summaryBox.innerHTML = cart.map(item => {
     total += item.price;
-    return `<div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px;"><span>${item.categoryName} (${item.selectedSize}/${item.selectedColor})</span><strong>${formatVND(item.price)}</strong></div>`;
+    return `<div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px;"><span>${item.categoryName} (${item.selectedSize}/${item.selectedColor})</span></div>`;
   }).join('');
   document.getElementById('checkoutTotalPrice').innerText = formatVND(total);
   modal.classList.add('active');
