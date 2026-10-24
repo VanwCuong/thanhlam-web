@@ -6,30 +6,38 @@
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbyNuoBYZooduQKXJSsx0FvFWXmPeuNnNN3aCDmVchXLIFE6y0jQ9thYd2hCHjrxjjIm/exec";
 
 const supportsScrollReveal = 'IntersectionObserver' in window;
+const POLO_IMAGES = [
+  'assets/products/ao-polo-1.jpg',
+  'assets/products/ao-polo-2.jpg',
+  'assets/products/ao-polo-3.jpg',
+  'assets/products/ao-polo-4.jpg',
+  'assets/products/ao-polo-5.jpg',
+  'assets/products/ao-polo-6.jpg'
+];
 
 const PRODUCTS = [
   {
-    id: 'tl-01',
-    name: 'Áo Sơ Mi Linen Form Slim',
-    category: 'so-mi',
-    categoryName: 'Áo Sơ Mi',
-    price: 495000,
-    image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80',
-    colors: ['Khaki', 'Trắng Kem', 'Đen Cacao'],
-    sizes: ['S', 'M', 'L', 'XL'],
-    desc: 'Chất liệu Linen tự nhiên thoáng mát, form dáng Slim fit tôn nét lịch lãm hiện đại.'
-  },
-  {
     id: 'tl-02',
-    name: 'Áo Polo Pique Cotton Cacao',
+    name: 'Áo Polo',
     category: 'polo',
     categoryName: 'Áo Polo',
     price: 385000,
-    image: 'https://images.unsplash.com/photo-1627225924765-552d49cf47ad?auto=format&fit=crop&w=800&q=80',
-    colors: ['Cacao Lux', 'Đen Obsidian', 'Xám'],
+    image: POLO_IMAGES[0],
+    colors: ['Đen'],
     sizes: ['M', 'L', 'XL'],
-    desc: 'Sợi Cotton Pique cá sấu co giãn 4 chiều, giữ dáng cổ áo sắc nét cả ngày.'
+    desc: ''
   },
+  ...POLO_IMAGES.slice(1).map((image, index) => ({
+    id: `tl-${String(index + 6).padStart(2, '0')}`,
+    name: 'Áo Polo',
+    category: 'polo',
+    categoryName: 'Áo Polo',
+    price: 385000,
+    image,
+    colors: [index === 0 || index === 2 ? 'Trắng' : 'Đen'],
+    sizes: ['M', 'L', 'XL'],
+    desc: ''
+  })),
   {
     id: 'tl-03',
     name: 'Quần Tây Tailored Trouser',
@@ -42,34 +50,34 @@ const PRODUCTS = [
     desc: 'Cắt may chuẩn Minimalist, chất liệu Wool blend đứng form không nhăn.'
   },
   {
-    id: 'tl-04',
-    name: 'Áo Khoác Blazer Unstructured',
+    id: 'tl-06',
+    name: 'Áo Khoác',
     category: 'ao-khoac',
     categoryName: 'Áo Khoác',
     price: 890000,
-    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80',
-    colors: ['Đen Cacao', 'Xám Bê Tông'],
+    image: 'assets/products/ao-khoac-len-1.jpg',
+    colors: ['Xám'],
     sizes: ['M', 'L', 'XL'],
-    desc: 'Thiết kế Blazer không đệm vai trẻ trung, dễ phối theo phong cách Streetwear Smart.'
+    desc: ''
   },
   {
-    id: 'tl-05',
-    name: 'Ví Da Bò Minimalist Cardholder',
-    category: 'phu-kien',
-    categoryName: 'Phụ Kiện',
-    price: 290000,
-    image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=800&q=80',
-    colors: ['Nâu Cacao', 'Đen Minimal'],
-    sizes: ['One Size'],
-    desc: 'Da bò nguyên tấm cắt gọn tinh tế, đựng vừa vặn các dòng thẻ và tiền mặt.'
+    id: 'tl-07',
+    name: 'Áo Khoác',
+    category: 'ao-khoac',
+    categoryName: 'Áo Khoác',
+    price: 890000,
+    image: 'assets/products/ao-khoac-len-2.jpg',
+    colors: ['Đen'],
+    sizes: ['M', 'L', 'XL'],
+    desc: ''
   }
 ];
 
 let cart = JSON.parse(localStorage.getItem('THANH_LAM_CART')) || [];
 let selectedMix = {
-  top: PRODUCTS[0],
-  bottom: PRODUCTS[2],
-  accessory: PRODUCTS[4]
+  top: PRODUCTS.find(product => product.category === 'polo'),
+  bottom: PRODUCTS.find(product => product.category === 'quan'),
+  accessory: PRODUCTS.find(product => product.category === 'ao-khoac')
 };
 let scrollObserver = null;
 
@@ -188,6 +196,9 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function renderHomeView() {
+  const featuredPolo = PRODUCTS.find(product => product.category === 'polo');
+  const featuredJacket = PRODUCTS.find(product => product.category === 'ao-khoac');
+
   return `
     <section class="hero-section scroll-reveal">
       <div class="hero-text">
@@ -201,12 +212,10 @@ function renderHomeView() {
       </div>
       <div class="hero-gallery">
         <div class="polaroid-card card-1">
-          <img src="${PRODUCTS[0].image}" alt="Lookbook 1">
-          <div class="polaroid-caption">Linen Modern Fit</div>
+          <img src="${featuredPolo.image}" alt="Áo Polo">
         </div>
         <div class="polaroid-card card-2">
-          <img src="${PRODUCTS[3].image}" alt="Lookbook 2">
-          <div class="polaroid-caption">Minimalist Blazer</div>
+          <img src="${featuredJacket.image}" alt="Áo Khoác">
         </div>
       </div>
     </section>
@@ -284,23 +293,24 @@ function renderCustomerFeedbackView() {
 }
 
 function renderCatalogView() {
+  const poloItems = PRODUCTS.filter(product => product.category === 'polo');
+  const jacketItems = PRODUCTS.filter(product => product.category === 'ao-khoac');
+
   return `
     <section class="catalog-section scroll-reveal">
       <div class="section-header">
         <h2 class="section-title">BỘ SƯU TẬP SẢN PHẨM</h2>
-        <div class="category-filters">
-          <button class="filter-btn active" onclick="filterCategory('all', this)">Tất Cả</button>
-          <button class="filter-btn" onclick="filterCategory('so-mi', this)">Áo Sơ Mi</button>
-          <button class="filter-btn" onclick="filterCategory('polo', this)">Áo Polo</button>
-          <button class="filter-btn" onclick="filterCategory('quan', this)">Quần Tây/Chino</button>
-          <button class="filter-btn" onclick="filterCategory('ao-khoac', this)">Áo Khoác</button>
-          <button class="filter-btn" onclick="filterCategory('phu-kien', this)">Phụ Kiện</button>
-        </div>
       </div>
 
-      <div class="product-grid" id="productGrid">
-        ${renderProductCards(PRODUCTS)}
-      </div>
+      <section class="product-category-section" aria-labelledby="polo-category-title">
+        <h3 class="product-category-title" id="polo-category-title">Áo Polo</h3>
+        <div class="product-grid">${renderProductCards(poloItems)}</div>
+      </section>
+
+      <section class="product-category-section" aria-labelledby="jacket-category-title">
+        <h3 class="product-category-title" id="jacket-category-title">Áo Khoác</h3>
+        <div class="product-grid">${renderProductCards(jacketItems)}</div>
+      </section>
     </section>
   `;
 }
@@ -309,7 +319,7 @@ function renderProductCards(items) {
   return items.map(prod => `
     <div class="product-card">
       <div class="product-thumb">
-        <img src="${prod.image}" alt="${prod.name}">
+        <img src="${prod.image}" alt="${prod.categoryName}">
         <div class="product-actions">
           <button class="btn btn-primary btn-block product-quickview-btn" onclick="openQuickView('${prod.id}')">
             <i class="fa-solid fa-eye"></i> XEM NHANH
@@ -318,7 +328,6 @@ function renderProductCards(items) {
       </div>
       <div class="product-info">
         <span class="product-cat">${prod.categoryName}</span>
-        <h3 class="product-title">${prod.name}</h3>
         <div class="product-price">${formatVND(prod.price)}</div>
       </div>
     </div>
@@ -326,7 +335,7 @@ function renderProductCards(items) {
 }
 
 function renderMixMatchView() {
-  const tops = PRODUCTS.filter(p => p.category === 'so-mi' || p.category === 'polo');
+  const tops = PRODUCTS.filter(p => p.category === 'polo');
   const bottoms = PRODUCTS.filter(p => p.category === 'quan');
   const accessories = PRODUCTS.filter(p => p.category === 'phu-kien' || p.category === 'ao-khoac');
 
@@ -345,7 +354,7 @@ function renderMixMatchView() {
               ${tops.map(p => `
                 <button type="button" class="option-item ${selectedMix.top.id === p.id ? 'selected' : ''}" data-product-id="${p.id}" aria-pressed="${selectedMix.top.id === p.id}">
                   <img src="${p.image}" alt="">
-                  <span>${p.name}</span>
+                  <span>${p.categoryName}</span>
                 </button>
               `).join('')}
             </div>
@@ -357,7 +366,7 @@ function renderMixMatchView() {
               ${bottoms.map(p => `
                 <button type="button" class="option-item ${selectedMix.bottom.id === p.id ? 'selected' : ''}" data-product-id="${p.id}" aria-pressed="${selectedMix.bottom.id === p.id}">
                   <img src="${p.image}" alt="">
-                  <span>${p.name}</span>
+                  <span>${p.categoryName}</span>
                 </button>
               `).join('')}
             </div>
@@ -369,7 +378,7 @@ function renderMixMatchView() {
               ${accessories.map(p => `
                 <button type="button" class="option-item ${selectedMix.accessory.id === p.id ? 'selected' : ''}" data-product-id="${p.id}" aria-pressed="${selectedMix.accessory.id === p.id}">
                   <img src="${p.image}" alt="">
-                  <span>${p.name}</span>
+                  <span>${p.categoryName}</span>
                 </button>
               `).join('')}
             </div>
@@ -378,9 +387,9 @@ function renderMixMatchView() {
 
         <div class="studio-preview">
           <div class="outfit-display">
-            <div class="outfit-slot" data-mix-slot="top"><img src="${selectedMix.top.image}" alt="${selectedMix.top.name}"></div>
-            <div class="outfit-slot" data-mix-slot="bottom"><img src="${selectedMix.bottom.image}" alt="${selectedMix.bottom.name}"></div>
-            <div class="outfit-slot" data-mix-slot="accessory"><img src="${selectedMix.accessory.image}" alt="${selectedMix.accessory.name}"></div>
+            <div class="outfit-slot" data-mix-slot="top"><img src="${selectedMix.top.image}" alt="${selectedMix.top.categoryName}"></div>
+            <div class="outfit-slot" data-mix-slot="bottom"><img src="${selectedMix.bottom.image}" alt="${selectedMix.bottom.categoryName}"></div>
+            <div class="outfit-slot" data-mix-slot="accessory"><img src="${selectedMix.accessory.image}" alt="${selectedMix.accessory.categoryName}"></div>
           </div>
           <div class="outfit-summary">
             <h4>TỔNG CỘNG OUTFIT</h4>
@@ -411,23 +420,13 @@ function renderContactView() {
     <section class="content-page contact-page scroll-reveal">
       <h2 class="content-page-title">LIÊN HỆ VỚI CHÚNG TÔI</h2>
       <div class="contact-actions">
-        <a href="https://zalo.me" target="_blank" class="btn btn-primary"><i class="fa-solid fa-comment-dots"></i> CHAT ZALO CSKH</a>
-        <a href="https://facebook.com" target="_blank" class="btn btn-outline"><i class="fa-brands fa-facebook"></i> FACEBOOK FANPAGE</a>
+        <a href="tel:+84349595949" class="btn btn-primary"><i class="fa-solid fa-phone"></i> 0349 595 949</a>
+        <a href="https://zalo.me/0349595949" target="_blank" rel="noopener noreferrer" class="btn btn-outline"><i class="fa-solid fa-comment-dots"></i> ZALO</a>
+        <a href="https://www.facebook.com/share/1Gv2RrQ35y/" target="_blank" rel="noopener noreferrer" class="btn btn-outline"><i class="fa-brands fa-facebook"></i> FACEBOOK</a>
+        <a href="https://www.tiktok.com/@taolathanhlam199" target="_blank" rel="noopener noreferrer" class="btn btn-outline"><i class="fa-brands fa-tiktok"></i> TIKTOK</a>
       </div>
     </section>
   `;
-}
-
-function filterCategory(cat, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const grid = document.getElementById('productGrid');
-  if (cat === 'all') {
-    grid.innerHTML = renderProductCards(PRODUCTS);
-  } else {
-    const filtered = PRODUCTS.filter(p => p.category === cat);
-    grid.innerHTML = renderProductCards(filtered);
-  }
 }
 
 function openQuickView(id) {
@@ -438,12 +437,10 @@ function openQuickView(id) {
   const body = document.getElementById('quickViewBody');
 
   body.innerHTML = `
-    <div><img class="quickview-image" src="${prod.image}" alt="${prod.name}"></div>
+    <div><img class="quickview-image" src="${prod.image}" alt="${prod.categoryName}"></div>
     <div>
       <span class="product-cat">${prod.categoryName}</span>
-      <h2 class="quickview-title">${prod.name}</h2>
       <div class="product-price quickview-price">${formatVND(prod.price)}</div>
-      <p class="quickview-description">${prod.desc}</p>
       <div class="form-group"><label>Chọn Size</label><select id="qvSize">${prod.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}</select></div>
       <div class="form-group"><label>Chọn Màu</label><select id="qvColor">${prod.colors.map(c => `<option value="${c}">${c}</option>`).join('')}</select></div>
       <button class="btn btn-accent btn-block quickview-add-to-cart" onclick="addToCartFromQuickView('${prod.id}')">THÊM VÀO GIỎ HÀNG</button>
@@ -457,7 +454,7 @@ function addToCartFromQuickView(id) {
   cart.push({ ...prod, selectedSize: document.getElementById('qvSize').value, selectedColor: document.getElementById('qvColor').value, cartId: Date.now() });
   saveCart();
   document.getElementById('quickViewModal').classList.remove('active');
-  showToast(`Đã thêm ${prod.name} vào giỏ hàng!`);
+  showToast(`Đã thêm ${prod.categoryName} vào giỏ hàng!`);
   triggerCartBump();
 }
 
@@ -484,7 +481,7 @@ function selectMixItem(type, id) {
 
   const previewImage = section.querySelector(`.outfit-slot[data-mix-slot="${type}"] img`);
   previewImage.src = prod.image;
-  previewImage.alt = prod.name;
+  previewImage.alt = prod.categoryName;
 
   const total = Object.values(selectedMix).reduce((sum, item) => sum + item.price, 0);
   section.querySelector('.outfit-total').textContent = formatVND(total);
@@ -520,9 +517,9 @@ function updateCartUI() {
     total += item.price;
     return `
       <div class="cart-item">
-        <img src="${item.image}" alt="${item.name}">
+        <img src="${item.image}" alt="${item.categoryName}">
         <div class="cart-item-details">
-          <div class="cart-item-title">${item.name}</div>
+          <div class="cart-item-title">${item.categoryName}</div>
           <div class="cart-item-meta">Size: ${item.selectedSize} | Màu: ${item.selectedColor}</div>
           <div class="cart-item-price">${formatVND(item.price)}</div>
         </div>
@@ -615,7 +612,7 @@ function openCheckoutModal() {
   let total = 0;
   summaryBox.innerHTML = cart.map(item => {
     total += item.price;
-    return `<div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px;"><span>${item.name} (${item.selectedSize}/${item.selectedColor})</span><strong>${formatVND(item.price)}</strong></div>`;
+    return `<div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px;"><span>${item.categoryName} (${item.selectedSize}/${item.selectedColor})</span><strong>${formatVND(item.price)}</strong></div>`;
   }).join('');
   document.getElementById('checkoutTotalPrice').innerText = formatVND(total);
   modal.classList.add('active');
@@ -641,30 +638,32 @@ async function handleOrderSubmit(e) {
     customerHeight: document.getElementById('customerHeight').value,
     customerWeight: document.getElementById('customerWeight').value,
     orderNote: document.getElementById('orderNote').value,
-    cartItems: cart.map(i => `${i.name} (${i.selectedSize}/${i.selectedColor})`).join('; '),
+    cartItems: cart.map(i => `${i.categoryName} (${i.selectedSize}/${i.selectedColor})`).join('; '),
     totalPrice: document.getElementById('checkoutTotalPrice').innerText,
     orderDate: new Date().toLocaleString('vi-VN')
   };
   try {
     const response = await fetch(SHEET_URL, {
       method: 'POST',
-      mode: 'no-cors',
+      mode: 'cors',
       headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
       body: JSON.stringify(orderData)
     });
-
-    if (response.type === 'opaque') {
-      alert('Yêu cầu đã được gửi tới Apps Script nhưng trình duyệt không thể xác nhận dữ liệu đã được ghi vào Sheet. Giỏ hàng vẫn được giữ lại. Hãy kiểm tra Sheet trước khi gửi lại để tránh tạo đơn trùng.');
-      return;
-    }
 
     if (!response.ok) {
       throw new Error(`Google Apps Script returned HTTP ${response.status}`);
     }
 
-    const result = await response.json();
+    const responseText = await response.text();
+    let result;
+    try {
+      result = JSON.parse(responseText);
+    } catch {
+      throw new Error('Apps Script không trả JSON hợp lệ. Hãy kiểm tra phiên bản Web App đã triển khai.');
+    }
+
     if (!result || result.ok !== true) {
-      throw new Error('Google Apps Script did not confirm the order');
+      throw new Error(result?.error || 'Apps Script từ chối đơn hàng nhưng không trả lý do. Hãy cập nhật và triển khai phiên bản mới nhất của GoogleAppsScript.gs.');
     }
 
     showToast('Đơn hàng đã được ghi nhận. Cảm ơn bạn.');
@@ -674,7 +673,8 @@ async function handleOrderSubmit(e) {
     document.getElementById('orderForm').reset();
   } catch (error) {
     console.error('Google Sheets order submission failed:', error);
-    alert('Không xác nhận được đơn hàng. Giỏ hàng vẫn được giữ lại; hãy kiểm tra Google Sheet trước khi thử gửi lại.');
+    const detail = error instanceof Error ? error.message : String(error);
+    alert(`Không ghi được đơn hàng vào Google Sheet.\n\nChi tiết: ${detail}\n\nGiỏ hàng vẫn được giữ lại.`);
   } finally {
     submitBtn.disabled = false;
     submitBtn.removeAttribute('aria-busy');
